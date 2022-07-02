@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <title>Meme Builds Event</title>
+  <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/vant@3/lib/index.css" />
+  <style>
+    [v-cloak]   { display: none; }
+    @font-face {
+      font-family: Genshin;
+      src: url(../fonts/zh-cn.ttf);
+    }
+    body {
+      background-color: #D9D1C5;
+      color: #495366;
+      padding: 0 5%;
+      font-family: Genshin;
+    }
+    main {
+      margin-left: 170px;
+    }
+    nav {
+      float: left;
+      position: fixed;
+    }
+    header {
+      padding-bottom: .5em;
+    }
+    section {
+      padding: .8em;
+      background-color: #EBE2D9;
+      margin: 4px;
+      outline: 4px #D5C9B8 solid;
+      border-top: 1px #F7F2E8 solid;
+    }
+    h1, h2 {
+      margin: 0;
+    }
+    strong {
+      
+    }
+    .text-centered {
+      text-align: center;
+    }
+    .icon-image {
+      width: 1em;
+      height: 1em;
+      vertical-align: text-top;
+    }
+    :root {
+      --van-background-color: #D9D1C5;
+      --van-background-color-light: #EBE2D9;;
+      --van-border-color: #AA9079;
+      --van-text-color: #846040;
+      --van-danger-color: #495366; /* This is the highlight actually */
+      --van-sidebar-width: 170px;
+      --van-sidebar-selected-background-color: transparent;
+      --van-sidebar-active-color: transparent;
+      --van-sidebar-font-size: 1.2em;
+      --van-sidebar-selected-border-color: #846040;
+      --van-sidebar-padding: 1em 1em 1em 1.5em;
+    }
+    .van-sidebar-item::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      box-sizing: border-box;
+      background-color: transparent;
+      width: 12px;
+      height: 12px;
+      transform: rotate(0.125turn) translate(0, -50%);
+      border: 3px solid #846040;
+    }
+    .van-sidebar-item--select::before {
+      background-color: #846040;
+    }
+    @media screen and (max-width: 800px) {
+      body {
+        padding: 0 10px;
+      }
+      main {
+        margin-left: 0;
+      }
+      .desktop-only {
+        display: none;
+      }
+      section {
+        padding: .5em;
+      }
+    }
+  </style>
+
+  <!-- import script -->
+  <script src="https://fastly.jsdelivr.net/npm/vue@3"></script>
+  <script src="https://fastly.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
+</head>
+<body>
+  <div id="app" v-cloak>
+
+    <nav class="desktop-only">
+      <van-sidebar v-model="activeSection" @change="goToSection">
+        <van-sidebar-item v-for="section of sections" :title="section">
+        </van-sidebar-item>
+      </van-sidebar>
+    </nav>
+
+    <main>
+      <header>
+        <p v-if="time == 0">Judgment in progress</p>
+        <p v-else>
+          Judgment begins on Friday, July 8
+          <van-count-down :time="time" format="DDd HHh mmm sss"></van-count-down>
+        </p>
+        <h1>
+          Meme Builds Event
+          <img src="../images/cat_army_logo.png" class="icon-image">
+        </h1>
+        <p>hosted by cat army</p>
+      </header>
+
+      <section>
+        <h2 ref="Info">Info</h2>
+        <p>Make a secret Genshin meme build and drop hints about what you're building. A single meme can include either 1 or 2 characters.</p>
+
+        <van-divider></van-divider>
+
+        <van-tabs v-model:active="activeInfoTab" type="card">
+          <van-tab title="Submission">
+            <p>Send your main hint and a screenshot of your current character roster to any of the judges.</p>
+            <p>After 2 weeks, the judges will try to guess your meme, and then you reveal and showcase it either in co-op or as a video. Once all the memes are revealed, the judges will discuss and score the memes. The final scores will be posted along with the main hint, description of the build, and an optional additional caption.</p>
+          </van-tab>
+          <van-tab title="Prizes">
+            <p>
+              <ul>
+                <li>1st place: an egg, art collaboration by cat army</li>
+                <li>2nd place: an egg</li>
+                <li>3rd place: an egg, drawn blindfolded</li>
+              </ul>
+            </p>
+            <p>Note that you will not receive a physical egg, but photos of the character you request, drawn on an egg.</p>
+          </van-tab>
+          <van-tab title="Points">
+            <p>
+              <ul>
+                <li>40 pts <strong>Uniqueness</strong> - Be creative! Make something that's not all over YouTube.</li>
+                <li>20 pts <strong>Usability</strong> - Memes are greater when you can use them. Sorry VV Ningguang.</li>
+                <li>25 pts <strong>Dedication</strong> - Grabbing an odd weapon and calling it a day is weak.</li>
+                <li>15 pts <strong>Hints</strong> - Quality hints are important, but don't reveal your meme early.</li>
+                <ul>
+                  <li>• 4 relation to character</li>
+                  <li>• 4 relation to what you did with them</li>
+                  <li>• 7 cleverness of the hints</li>
+                </ul>
+              </ul>
+            </p>
+            <p>Each judge can award an additional 5 bias points to one contestant of their choice.</p>
+          </van-tab>
+        </van-tabs>
+      </section>
+
+      <h2 ref="Results" style="margin-top:1em">Results</h2>
+      <p>Judgment has not yet begun</p>
+      <!--
+      <van-row class="text-centered">
+        <van-col span="8">
+          Second Place
+        </van-col>
+        <van-col span="8">
+          First Place winner
+        </van-col>
+        <van-col span="8">
+          Third Place
+        </van-col>
+      </van-row>
+      <p>Congratulations to our winners!</p>
+      <p>Showcase video</p>
+      <p>Ranking</p>
+      <p>Table goes here</p>
+    -->
+
+      <van-divider></van-divider>
+
+      <h2 ref="Entries">Entries</h2>
+      <p>There are currently <strong>4</strong> contestants</p>
+
+      <!--
+      <van-row></van-row>
+      -->
+    </main>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    const app = createApp({
+      data() {
+        return {
+          time: 1657339140000 - Date.now(),
+          sections: ["Info", "Results", "Entries"],
+          activeSection: 0,
+          activeInfoTab: 0
+        }
+      },
+      methods: {
+        goToSection(index) {
+          const element = this.$refs[this.sections[index]];
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      },
+      created() {
+        if (this.time < 0) {
+          this.time = 0;
+        }
+      }
+    });
+
+    app.component('speech-bubble', {
+      props: {
+        right: false
+      },
+      template:
+      `<div style="background-color:red">
+        <slot></slot>
+      </div>`
+    });
+
+    app.use(vant);
+
+    // Register Lazyload directive
+    app.use(vant.Lazyload);
+
+    app.mount('#app');
+  </script>
+</body>
+</html>
