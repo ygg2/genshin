@@ -60,6 +60,10 @@
       vertical-align: text-top;
     }
 
+    .sorting {
+      color: #CC8000;
+    }
+
     /* one of the tiles for the results */
     .meme-card {
       box-sizing: border-box;
@@ -73,7 +77,7 @@
     /* formatting results+comments for desktop */
     .result-container {
       display: flex;
-      padding-bottom: 2em;
+      padding-bottom: 4em;
     }
     .result-side-box {
       display: inline-block;
@@ -94,6 +98,13 @@
     }
     .desktop-right {
       padding-left: 1em;
+    }
+    .mobile-only {
+      display: none;
+    }
+    .mobile-table {
+      background-color: #EBE2D9;
+      padding: 1em;
     }
 
     /* credit to https://projects.verou.me/bubbly/ */
@@ -167,6 +178,9 @@
     .van-sidebar-item--select::before {
       background-color: #846040;
     }
+    .van-dropdown-menu__title::after {
+      border-color: transparent transparent #846040 #846040;
+    }
 
     /* tablet adjustments */
     @media screen and (max-width: 1264px) {
@@ -205,12 +219,11 @@
       .desktop-right {
         padding: 0;
       }
+      .mobile-only {
+        display: block;
+      }
     }
   </style>
-
-  <!-- import script -->
-  <script src="https://fastly.jsdelivr.net/npm/vue@3"></script>
-  <script src="https://fastly.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
 </head>
 <body>
   <div id="app" v-cloak>
@@ -285,10 +298,7 @@
       </section>
 
       <h2 id="Results" style="margin-top:1em">Results</h2>
-      <p>Judgment has not yet begun</p>
-      <van-divider></van-divider>
-      <h2 id="Entries">Entries</h2>
-      <p>There are currently <strong>6</strong> contestants</p>
+      <p>Judgment is in progress.</p>
 
       <!--<van-row class="text-centered" gutter="10" align="bottom" style="margin-bottom: 20px">
         <van-col span="7">
@@ -333,29 +343,37 @@
       </van-row>
       <h2 style="text-align: center">Congratulations to our winners!</h2>
       
-      <div style="display:flex; justify-content:center; margin: 2em">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/on59ZGAEIB4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
+      <p>Video</p>
 
       <p>Ranking (click to sort by category)</p>
-      <van-grid :column-num="categories.length" clickable :border="false">
+      
+      <van-grid class="desktop-only" :column-num="7" :border="false">
         <van-grid-item
           v-for="(heading, index) of categories"
           @click="sortByCategory(index)"
         >
-          <p><strong>{{ categories[sorting]==heading ? '•' : ''}}{{ heading }}</strong></p>
+          <p :class="{ sorting: heading === categories[sorting] }">
+            {{ heading }}
+          </p>
         </van-grid-item>
       </van-grid>
-      <van-grid :column-num="categories.length">
+      <van-grid class="desktop-only" :column-num="categories.length">
         <van-grid-item v-for="item in rankedDataDump">
           <p>{{ item }}</p>
         </van-grid-item>
       </van-grid>
 
-      <van-divider></van-divider>
+      <van-dropdown-menu class="mobile-only">
+        <van-dropdown-item v-model="sorting" :options="mobileCategories" />
+      </van-dropdown-menu>
+      <div class="mobile-only">
+        <van-row v-for="contestant of points" class="mobile-table">
+          <van-col span="16">{{ contestant[0] }}</van-col>
+          <van-col span="8">{{ contestant[sorting] }}</van-col>
+        </van-row>
+      </div>
 
-      <h2 id="Entries">Entries</h2>
-      <p>There are currently <strong>6</strong> contestants</p>
+      <h2 id="Entries" style="margin: 1em 0">Entries</h2>
 
       <result-display
         v-for="contestant of results"
@@ -368,7 +386,7 @@
       <h2>Thank you for your submissions!</h2>
 
       <p style="margin-bottom: 3em">This page uses <a href="https://vuejs.org/">Vue3</a>, <a href="https://youzan.github.io/vant/">Vant</a> and <a href="https://projects.verou.me/bubbly/">Bubbly</a></p>
-      <!---->
+
     </main>
 
     <van-button
@@ -380,6 +398,9 @@
     </van-button>
   </div>
 
+  <!-- import script -->
+  <script src="https://fastly.jsdelivr.net/npm/vue@3"></script>
+  <script src="https://fastly.jsdelivr.net/npm/vant@3/lib/vant.min.js"></script>
   <script>
     const { createApp } = Vue;
 
@@ -387,30 +408,142 @@
       data() {
         return {
           time: 1657339140000 - Date.now(),
-          eventProgress: 0,
+          eventProgress: 1,
           sections: ["Info", "Results"],
           activeSection: 0,
           activeInfoTab: 0,
           judges: {
-            egg: '../images/cat_army_logo.png',
-            agg: '../images/cat_army_logo.png'
+            agg: 'Agg.webp',
+            egg: 'Egg.webp',
+            ugg: 'Ugg.webp'
           },
           categories: ['name', 'total', 'uniqueness', 'usability', 'dedication', 'hints', 'bias'],
+          mobileCategories: [
+            { text: 'total', value: 1 },
+            { text: 'uniqueness', value: 2 },
+            { text: 'usability', value: 3 },
+            { text: 'dedication', value: 4 },
+            { text: 'hints', value: 5 },
+            { text: 'bias', value: 6 }
+          ],
           sorting: 1,
           results: [
             {
-              icon: '../images/cat_army_logo.png',
-              name: 'Name',
-              hint: 'Hint',
-              catchphrase: 'Catchphrase',
-              meme: 'Meme description',
-              uniqueness: 1,
-              usability: 2,
-              dedication: 13,
+              icon: 'Kat.webp',
+              name: 'Kat',
+              hint: 'Wasted potential',
+              elements: [],
+              catchphrase: '',
+              meme: '',
+              uniqueness: 40,
+              usability: 20,
+              dedication: 25,
               hints: {
-                character: 2,
-                build: 1,
-                cleverness: 6
+                character: 4,
+                build: 4,
+                cleverness: 7
+              },
+              bias: []
+            },
+            {
+              icon: 'Ice.webp',
+              name: 'Ice',
+              hint: 'It was me all along',
+              elements: [],
+              catchphrase: '',
+              meme: '',
+              uniqueness: 40,
+              usability: 20,
+              dedication: 25,
+              hints: {
+                character: 4,
+                build: 4,
+                cleverness: 7
+              },
+              bias: []
+            },
+            {
+              icon: 'Bord.webp',
+              name: 'Bord',
+              hint: 'Crystallized Intelligence',
+              elements: [],
+              catchphrase: '',
+              meme: '',
+              uniqueness: 40,
+              usability: 20,
+              dedication: 25,
+              hints: {
+                character: 4,
+                build: 4,
+                cleverness: 7
+              },
+              bias: []
+            },
+            {
+              icon: 'Toast.webp',
+              name: 'Toast',
+              hintImage: 'ToastHint.png',
+              elements: [],
+              catchphrase: '',
+              meme: '',
+              uniqueness: 40,
+              usability: 20,
+              dedication: 25,
+              hints: {
+                character: 4,
+                build: 4,
+                cleverness: 7
+              },
+              bias: []
+            },
+            {
+              icon: 'Schnee.webp',
+              name: 'Schnee',
+              hint: 'Revenge is a dish best served cold, and repeatedly',
+              elements: [],
+              catchphrase: '',
+              meme: '',
+              uniqueness: 40,
+              usability: 20,
+              dedication: 25,
+              hints: {
+                character: 4,
+                build: 4,
+                cleverness: 7
+              },
+              bias: []
+            },
+            {
+              icon: 'Pleco.webp',
+              name: 'Pleco',
+              hint: 'Fast chonk',
+              elements: [],
+              catchphrase: '',
+              meme: '',
+              uniqueness: 40,
+              usability: 20,
+              dedication: 25,
+              hints: {
+                character: 4,
+                build: 4,
+                cleverness: 7
+              },
+              bias: []
+            },
+            {
+              icon: 'Alex.webp',
+              name: 'Alex',
+              hint: 'Being maidenless when you want it requires exceptionally Bad luck',
+              elements: [],
+              catchphrase: '',
+              meme: '',
+              uniqueness: 40,
+              usability: 20,
+              dedication: 25,
+              hints: {
+                character: 4,
+                build: 4,
+                cleverness: 7
               },
               bias: []
             },
@@ -418,6 +551,7 @@
               icon: '../images/cat_army_logo.png',
               name: 'Mihoyo',
               hint: 'Xiao is a highly mobile burst damage dealer',
+              elements: ['anemo'],
               catchphrase: 'USELESS',
               meme: '4 Noblesse Xiao eternally in burst state',
               uniqueness: 20,
@@ -491,28 +625,6 @@
           }
           this.points.push(data);
         }
-      },
-      mounted() {
-        this.$nextTick(() => {
-          // intersection observer api because the plugin I want to use is vue2
-          let intersectionOptions = {
-            root: null
-          }
-          let callback = (entries) => {
-            let entry = entries[0];
-            if (entry.isIntersecting) {
-              let id = this.sections.indexOf(entry.target.id);
-              if (this.activeSection != id) {
-                this.activeSection = id;
-              }
-            }
-          }
-          let observer = new IntersectionObserver(callback, intersectionOptions);
-          for (section of this.sections) {
-            let target = document.getElementById(section);
-            observer.observe(target);
-          }
-        });
       }
     });
 
@@ -541,6 +653,8 @@
         icon: String,
         name: String,
         hint: String,
+        hintImage: String,
+        elements: Array,
         catchphrase: {
           type: String,
           default: ''
@@ -552,7 +666,7 @@
         hints: Object,
         bias: Array,
         comments: Array,
-        judges: Array
+        judges: Object
       },
       data() {
         return {
@@ -580,7 +694,11 @@
                   </van-image>
                 </div>
                 <div class="result-main-box">
-                  <h3>{{ hint }}</h3>
+                  <h3>
+                    <img v-for="element of elements" :src="'../images/'+element+'.png'" style="width:24px; height:24px; vertical-align:text-top">
+                    <img v-if="hintImage" :src="hintImage">
+                    {{ hint }}
+                  </h3>
                   <p style="color: #846040; font-size: .7em;">{{ meme }}</p>
                   <p v-if="catchphrase" style="margin-top: 0"><em>"{{ catchphrase }}"</em></p>
                 </div>
@@ -610,7 +728,7 @@
                 <van-circle
                   v-model:current-rate="percent.usability"
                   :rate="percent.usability"
-                  :color="{'0%': '#FFEA00','100%': '#007B43'}"
+                  :color="{'0%': '#FFF260','100%': '#FFB349'}"
                   :stroke-width="60"
                   :text="usability+'/20'"
                 />
@@ -624,7 +742,7 @@
                 <van-circle
                   v-model:current-rate="percent.dedication"
                   :rate="percent.dedication"
-                  :color="{'0%': '#3fecff','100%': '#6149f6'}"
+                  :color="{'0%': '#00F083','100%': '#007B43'}"
                   :stroke-width="60"
                   :text="dedication+'/25'"
                 />
@@ -646,6 +764,7 @@
               <div class="meme-card" style="min-height: 0">
                 <h2>Total: {{ total }}</h2>
               </div>
+            </van-col>
           </van-row>
         </div>
         <div class="desktop-right">
