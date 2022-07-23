@@ -38,6 +38,9 @@
     h1, h2 {
       margin: 0;
     }
+    h1, h2, h3 {
+      font-weight: normal;
+    }
     strong {
       font-weight: normal;
       color: #CC8000;
@@ -52,7 +55,7 @@
       text-align: center;
     }
     .squishy p, h2, h3 {
-      margin: .2em;
+      margin: .2em 0;
     }
     .icon-image {
       width: 1em;
@@ -98,6 +101,9 @@
     }
     .desktop-right {
       padding-left: 1em;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
     }
     .mobile-only {
       display: none;
@@ -135,6 +141,7 @@
       background: #EBE2D9;
       margin-left: 0;
       margin-right: 16px;
+      margin-left: auto;
     }
     .speech-bubble.right:after {
       left: auto;
@@ -240,7 +247,7 @@
 
     <main id="Main">
       <header>
-        <p v-if="time == 0">Judgment in progress</p>
+        <p v-if="time == 0">This event has ended, check out the results!</p>
         <p v-else>
           Judgment begins on Friday, July 8
           <van-count-down :time="time" format="DDd HHh mmm sss"></van-count-down>
@@ -259,7 +266,7 @@
 
       <section>
         <h2 id="Info">Info</h2>
-        <p>Make a secret Genshin meme build and drop hints about what you're building. A single meme can include either 1 or 2 characters.</p>
+        <p>Travelers made a secret Genshin meme build and dropped hints about what they were building. A single meme could include either 1 or 2 characters.</p>
 
         <van-divider></van-divider>
 
@@ -292,23 +299,22 @@
                 </ul>
               </ul>
             </p>
-            <p>Each judge can award an additional 5 bias points to one contestant of their choice.</p>
+            <p>Each judge can award an additional bias point to one contestant of their choice.</p>
           </van-tab>
         </van-tabs>
       </section>
 
       <h2 id="Results" style="margin-top:1em">Results</h2>
-      <p>Judgment is in progress.</p>
 
-      <!--<van-row class="text-centered" gutter="10" align="bottom" style="margin-bottom: 20px">
+      <van-row class="text-centered" gutter="10" align="bottom" style="margin-bottom: 20px">
         <van-col span="7">
           <div class="meme-card squishy" style="min-height: 140px">
-            <p>Name</p>
+            <p>Kat</p>
             <van-image
               round
               width="64px"
               height="64px"
-              src="../images/cat_army_logo.png"
+              src="Kat.webp"
             >
             </van-image>
             <p>2nd</p>
@@ -316,12 +322,12 @@
         </van-col>
         <van-col span="10">
           <div class="meme-card squishy">
-            <p>Mihoyo</p>
+            <p>Ice</p>
             <van-image
               round
               width="64px"
               height="64px"
-              src="../images/cat_army_logo.png"
+              src="Ice.webp"
             >
             </van-image>
             <p>1st</p>
@@ -329,12 +335,12 @@
         </van-col>
         <van-col span="7">
           <div class="meme-card squishy" style="min-height: 140px">
-            <p>Noone</p>
+            <p>Alex + Bord</p>
             <van-image
               round
               width="64px"
               height="64px"
-              src="../images/cat_army_logo.png"
+              src="bord_alex.png"
             >
             </van-image>
             <p>3rd</p>
@@ -342,8 +348,7 @@
         </van-col>
       </van-row>
       <h2 style="text-align: center">Congratulations to our winners!</h2>
-      
-      <p>Video</p>
+      <p style="text-align: center">The first place tie between Kat and Ice was broken by the Pokémon coin</p>
 
       <p>Ranking (click to sort by category)</p>
       
@@ -380,7 +385,7 @@
         v-bind="contestant"
         :judges="judges"
       >
-      </result-display>-->
+      </result-display>
 
       <van-divider></van-divider>
       <h2>Thank you for your submissions!</h2>
@@ -408,14 +413,15 @@
       data() {
         return {
           time: 1657339140000 - Date.now(),
-          eventProgress: 1,
+          eventProgress: 2,
           sections: ["Info", "Results"],
           activeSection: 0,
           activeInfoTab: 0,
           judges: {
             agg: 'Agg.webp',
             egg: 'Egg.webp',
-            ugg: 'Ugg.webp'
+            ugg: 'Ugg.webp',
+            coin: 'coin.png'
           },
           categories: ['name', 'total', 'uniqueness', 'usability', 'dedication', 'hints', 'bias'],
           mobileCategories: [
@@ -432,143 +438,160 @@
               icon: 'Kat.webp',
               name: 'Kat',
               hint: 'Wasted potential',
-              elements: [],
+              elements: ['pyro'],
               catchphrase: '',
-              meme: '',
-              uniqueness: 40,
+              meme: '4 Shimenawa Phys Charged Attack Diluc',
+              uniqueness: 35,
               usability: 20,
-              dedication: 25,
+              dedication: 20,
               hints: {
-                character: 4,
-                build: 4,
-                cleverness: 7
+                character: 2,
+                build: 2,
+                cleverness: 6
               },
-              bias: []
+              bias: [],
+              comments: [
+                { judge: "agg", image: "Diluc.webp", right: true }
+              ]
             },
             {
               icon: 'Ice.webp',
               name: 'Ice',
               hint: 'It was me all along',
-              elements: [],
+              elements: ['geo', 'cryo'],
               catchphrase: '',
-              meme: '',
-              uniqueness: 40,
-              usability: 20,
+              meme: 'Cryo Albedo with Haran',
+              uniqueness: 36,
+              usability: 18,
               dedication: 25,
               hints: {
-                character: 4,
-                build: 4,
-                cleverness: 7
+                character: 2,
+                build: 2,
+                cleverness: 1
               },
-              bias: []
+              bias: ['ugg', 'coin'],
+              comments: [
+                { judge: "egg", text: "that 101% crit rate is hilarious", right: true },
+                { judge: "ugg", text: "High dedication for sure" }
+              ]
             },
             {
               icon: 'Bord.webp',
               name: 'Bord',
               hint: 'Crystallized Intelligence',
-              elements: [],
+              elements: ['hydro', 'geo'],
               catchphrase: '',
-              meme: '',
+              meme: '4 Archaic Petra Mona swim procs Albedo',
               uniqueness: 40,
-              usability: 20,
-              dedication: 25,
+              usability: 16,
+              dedication: 18,
               hints: {
-                character: 4,
-                build: 4,
-                cleverness: 7
+                character: 2,
+                build: 2,
+                cleverness: 4
               },
-              bias: []
+              bias: ['agg'],
+              comments: [
+                { judge: "ugg", text: "I feel Mona was barely in there, but intelligence can easily mean them both I feel" },
+                { judge: "agg", text: "mhm but mona honestly I feel more associated with losing 50/50 and being poor", right: true }, 
+                { judge: "agg", text: "than remembering she very smart", right: true },
+                { judge: "ugg", text: "I sure wasn't bord watching it" },
+                { judge: "ugg", text: "Yeah I'll leave now" }
+              ]
             },
             {
               icon: 'Toast.webp',
               name: 'Toast',
               hintImage: 'ToastHint.png',
-              elements: [],
+              elements: ['cryo', 'cryo'],
               catchphrase: '',
-              meme: '',
-              uniqueness: 40,
-              usability: 20,
+              meme: 'Shatter Chongyun',
+              uniqueness: 28,
+              usability: 10,
               dedication: 25,
               hints: {
-                character: 4,
-                build: 4,
-                cleverness: 7
+                character: 1,
+                build: 2,
+                cleverness: 5
               },
-              bias: []
+              bias: ['egg'],
+              comments: [
+                { judge: "agg", text: "haha cant kill birds sucker" },
+                { judge: "ugg", text: "neither can you", right: true },
+                { judge: "agg", text: "whatchu mean" },
+                { judge: "agg", text: "I was xiao uwu" },
+                { judge: "ugg", text: "no proof", right: true },
+                { judge: "ugg", text: "didnt happen", right: true }
+              ]
             },
             {
               icon: 'Schnee.webp',
               name: 'Schnee',
               hint: 'Revenge is a dish best served cold, and repeatedly',
-              elements: [],
+              elements: ['cryo', 'cryo'],
               catchphrase: '',
-              meme: '',
-              uniqueness: 40,
-              usability: 20,
+              meme: '4 Thundering Fury Eula E spam',
+              uniqueness: 33,
+              usability: 11,
               dedication: 25,
               hints: {
-                character: 4,
-                build: 4,
-                cleverness: 7
+                character: 3,
+                build: 3,
+                cleverness: 6
               },
-              bias: []
+              bias: [],
+              comments: [
+                { judge: "agg", text: "chongyun., again", right: true },
+                { judge: "egg", text: "well it is best served repeatedly after all" }
+              ]
             },
             {
               icon: 'Pleco.webp',
               name: 'Pleco',
               hint: 'Fast chonk',
-              elements: [],
+              elements: ['cryo', 'hydro'],
               catchphrase: '',
-              meme: '',
-              uniqueness: 40,
-              usability: 20,
-              dedication: 25,
+              meme: '4 Echoes Shatter Chongyun with Ayato support',
+              uniqueness: 32,
+              usability: 15,
+              dedication: 14,
               hints: {
-                character: 4,
-                build: 4,
-                cleverness: 7
+                character: 1,
+                build: 3,
+                cleverness: 4
               },
-              bias: []
+              bias: [],
+              comments: [
+                { judge: "ugg", text: "hes prone to death" },
+                { judge: "ugg", text: "like every other creature in this universe" },
+                { judge: "egg", text: "I don't care about death", right: true },
+                { judge: "ugg", text: "yeah fair point, death is a constant" }
+              ]
             },
             {
               icon: 'Alex.webp',
               name: 'Alex',
               hint: 'Being maidenless when you want it requires exceptionally Bad luck',
-              elements: [],
+              elements: ['pyro', 'anemo'],
               catchphrase: '',
-              meme: '',
-              uniqueness: 40,
-              usability: 20,
-              dedication: 25,
+              meme: 'VV Bennett',
+              uniqueness: 34,
+              usability: 16,
+              dedication: 23,
               hints: {
-                character: 4,
-                build: 4,
-                cleverness: 7
-              },
-              bias: []
-            },
-            {
-              icon: '../images/cat_army_logo.png',
-              name: 'Mihoyo',
-              hint: 'Xiao is a highly mobile burst damage dealer',
-              elements: ['anemo'],
-              catchphrase: 'USELESS',
-              meme: '4 Noblesse Xiao eternally in burst state',
-              uniqueness: 20,
-              usability: 0,
-              dedication: 25,
-              hints: {
-                character: 4,
-                build: 4,
+                character: 2,
+                build: 2,
                 cleverness: 6
               },
-              bias: ['egg', 'agg'],
+              bias: [],
               comments: [
-                { judge: "egg", text: "It'd be more unique if they didn't give Noblesse to every trial...", right: true },
-                { judge: "agg", text: "Why give them points?" },
-                { judge: "egg", text: "Then they would have 69 points", right: true }
+                { judge: "agg", text: "no maidens?" },
+                { judge: "ugg", text: "But Bennett has maidens", right: true },
+                { judge: "ugg", text: "Jean", right: true },
+                { judge: "agg", text: "you wanan tell the class something loonie" },
+                { judge: "ugg", text: "I've had 4 cans of energy drinks in the span of 30 minutes", right: true }
               ]
-            }
+            },
           ],
           points: []
         }
@@ -582,17 +605,22 @@
           this.sorting = index;
         },
         hintsTotal(contestant) {
-          return contestant.hints.build + contestant.hints.cleverness + contestant.bias.length * 5
+          return contestant.hints.build + contestant.hints.character + contestant.hints.cleverness;
         },
         total(contestant) {
-          return contestant.uniqueness + contestant.usability + contestant.dedication + contestant.hints.character + this.hintsTotal(contestant);
+          return contestant.uniqueness + contestant.usability + contestant.dedication + this.hintsTotal(contestant) + contestant.bias.length;
         }
       },
       computed: {
         rankedDataDump() {
           // sort points arrays by the current category
           this.points.sort((a, b) => {
-            return a[this.sorting] < b[this.sorting];
+            if (a[this.sorting] < b[this.sorting]) {
+              return 1;
+            } else if (a[this.sorting] > b[this.sorting]) {
+              return -2;
+            }
+            return 0;
           });
           let data = [].concat(...this.points);
           return data;
@@ -605,9 +633,9 @@
         }
         
         // create the page sections for each person
-        /*for (let contestant of this.results) {
+        for (let contestant of this.results) {
           this.sections.push(contestant.name);
-        }*/
+        }
 
         // processing and flattening points totals for the table
         for (let result of this.results) {
@@ -634,6 +662,7 @@
       props: {
         icon: '',
         text: '',
+        image: '',
         right: false
       },
       template:
@@ -641,7 +670,10 @@
         <div v-if="!right">
           <van-image round width="48px" height="48px" :src="icon"></van-image>
         </div>
-        <div class="speech-bubble" :class="{ right: right }">{{ text }}</div>
+        <div class="speech-bubble" :class="{ right: right }">
+          <div v-if="text">{{ text }}</div>
+          <img v-else :src="image">
+        </div>
         <div v-if="right">
           <van-image round width="48px" height="48px" :src="icon"></van-image>
         </div>
@@ -679,7 +711,7 @@
       },
       computed: {
         total() {
-          return this.uniqueness + this.usability + this.dedication + this.hints.character + this.hints.build + this.hints.cleverness + this.bias.length * 5;
+          return this.uniqueness + this.usability + this.dedication + this.hints.character + this.hints.build + this.hints.cleverness + this.bias.length;
         }
       },
       template:
@@ -696,7 +728,7 @@
                 <div class="result-main-box">
                   <h3>
                     <img v-for="element of elements" :src="'../images/'+element+'.png'" style="width:24px; height:24px; vertical-align:text-top">
-                    <img v-if="hintImage" :src="hintImage">
+                    <img v-if="hintImage" :src="hintImage" style="max-width:100%; vertical-align:middle">
                     {{ hint }}
                   </h3>
                   <p style="color: #846040; font-size: .7em;">{{ meme }}</p>
@@ -704,7 +736,7 @@
                 </div>
                 <div v-if="bias.length" style="position: absolute; top: -12px; right: 0">
                   <van-image v-for="judge of bias" round width="48px" height="48px" :src="judges[judge]"></van-image>
-                  <p style="margin: 0; font-size: .7em">+{{ bias.length * 5 }} bias</p>
+                  <p style="margin: 0; font-size: .7em">+{{ bias.length }} bias</p>
                 </div>
               </div>
             </van-col>
@@ -772,6 +804,7 @@
           <speech-bubble
             v-for="comment of comments"
             :text="comment.text"
+            :image="comment.image"
             :icon="judges[comment.judge]"
             :right="comment.right"
           ></speech-bubble>
