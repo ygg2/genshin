@@ -17,6 +17,10 @@
       flex-basis: 100%;
       line-height: 0;
     }
+    .box:hover {
+      box-shadow: 0 0 6px grey;
+      cursor: zoom-in;
+    }
     .cover-tile {
       width: 100%;
       height: 100%;
@@ -96,7 +100,6 @@
       },
       methods: {
         openModal(image) {
-          console.log(image);
           document.documentElement.classList.add("is-clipped");
           this.modal = image;
         },
@@ -124,7 +127,7 @@
         <div class="columns is-multiline is-mobile">
           <div v-for="image of images" class="column is-4-mobile">
             <div
-              class="box image is-square hover"
+              class="box image is-square"
               @click="$emit('view-large', image)"
             >
               <img :src="image" class="cover-tile">
