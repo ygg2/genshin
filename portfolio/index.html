@@ -44,9 +44,14 @@
 
     <section class="section">
       <h1 class="title">Application</h1>
-      <h2 class="is-size-5">Main Zine</h2>
-      <image-category :images="categories['Main Zine']" @view-large="openModal">
-      </image-category>
+
+      <div v-for="category of categories">
+        <h2 class="is-size-5">{{ category.name }}</h2>
+        <image-category
+          :images="images[category.name]"
+          @view-large="openModal"
+        ></image-category>
+      </div>
     </section>
 
     <Transition name="fade">
@@ -66,8 +71,12 @@
         return {
           // make stuff work
           modal: null,
+          categories: [
+            { name: "Main Zine", hash: "#main-zine" },
+            { name: "Ship Zine", hash: "#ship-zine" }
+          ],
           // images
-          categories: {
+          images: {
             "Main Zine": [
               "nahida.png",
               "witch_forest.png",
@@ -95,6 +104,14 @@
           document.documentElement.classList.remove("is-clipped");
           this.modal = null;
         },
+      },
+      beforeMount() {
+        let hash = window.location.hash;
+        if (hash) {
+          this.categories = this.categories.filter(
+            category => category.hash === hash
+          );
+        }
       }
     });
 
