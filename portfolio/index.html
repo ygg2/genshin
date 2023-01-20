@@ -47,7 +47,7 @@
   <main id="app" v-cloak>
 
     <section class="section">
-      <h1 class="title">Application</h1>
+      <!--<h1 class="title">Application</h1>-->
 
       <div v-for="category of categories">
         <h2 class="is-size-5">{{ category.name }}</h2>
@@ -61,7 +61,7 @@
     <Transition name="fade">
       <div v-if="modal!=null" class="modal is-active">
         <div class="modal-background" @click="closeModal"></div>
-        <img :src="modal" class="modal-image">
+        <img :src="modal[0]" class="modal-image">
       </div>
     </Transition>
 
@@ -76,24 +76,19 @@
           // make stuff work
           modal: null,
           categories: [
-            { name: "Main Zine", hash: "#main-zine" },
-            { name: "Ship Zine", hash: "#ship-zine" }
+            { name: "Application Portfolio", hash: "#application" },
           ],
           // images
           images: {
-            "Main Zine": [
-              "nahida.png",
-              "witch_forest.png",
-              "vamp_yuu_announcement_2021.jpg",
-              "vamp_yuu_glass.png",
-              "international_vamp_yuu_day.jpg"
-            ],
-            "Ship Zine": [
-              "keqing.png",
-              "bloody_kiss.png",
-              "yelan.png",
-              "vamp_yuu_vertical.png",
-              "trackpad.png"
+            "Application Portfolio": [
+              ["yelan.png", {'object-position': '10% 0'}],
+              ["garden.jpg", {'object-position': '40% 0'}],
+              ["vamp_yuu_announcement_2021.jpg", {'object-position': '35% 0'}],
+              ["nahida.png", {'object-position': '0 77%'}],
+              ["ice_queen.jpg", {}],
+              ["keqing.png", {'object-position': '0 0'}],
+              ["4_night_walk.jpg", {}],
+              ["witch_forest.png", {'object-position': '0 0'}],
             ]
           }
         }
@@ -125,12 +120,12 @@
       emits: ['view-large'],
       template: `
         <div class="columns is-multiline is-mobile">
-          <div v-for="image of images" class="column is-4-mobile">
+          <div v-for="image of images" class="column is-3 is-4-mobile">
             <div
               class="box image is-square"
               @click="$emit('view-large', image)"
             >
-              <img :src="image" class="cover-tile">
+              <img :src="image[0]" class="cover-tile" :style="image[1]">
             </div>
           </div>
         </div>
